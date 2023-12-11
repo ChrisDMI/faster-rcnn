@@ -1,0 +1,24 @@
+# config.yaml
+common:
+  img_path: "img"
+  csv_file: "labels.csv"
+  classes_file: "receipt_labels.txt"
+  seed: 42
+  
+
+train:
+  test_size: 0.2
+  batch_size: 16
+  nms_thresh: 0.01
+  num_epochs: 1
+  lr: 0.005
+  momentum: 0.9
+  decay: 0.0005
+  lr_step_size: 0.1
+  lr_gamma: 0.1
+  num_test_images: 5
+
+predict:
+  image_to_predict: "c:\\Users\\cnguiepesegnou\\Documents\\Projet_Repair_Smart\\Faster_RCNN\\faster_rcnn_format\\X00016469671.jpg"
+  batch_image_folder: "c:\\Users\\cnguiepesegnou\\Documents\\Projet_Repair_Smart\\Faster_RCNN\\batch_image"
+  path_to_trained_model : "c:\\Users\\cnguiepesegnou\\Documents\\Projet_Repair_Smart\\Faster_RCNN\\output-02-12-2023-00-24-16\\train\\epoch_15_model.pth"
