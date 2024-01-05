@@ -9,9 +9,9 @@ config = load_config(r'./src/Config/config.yaml')
 
 # Get the current directory
 current_dir = os.getcwd()
-IMG_PATH = os.path.join(current_dir, 'Data', config['common']['img_path'])  # Path to the 'img' folder
-CSV_PATH = os.path.join(current_dir, 'Data', config['common']['csv_file'])  # Path to 'labels.csv' in 'Data'
-CLASSES_LIST = classes_list(os.path.join(current_dir, 'Data', config['common']['classes_file']))  # Path to 'receipt_labels.txt' in 'Data'
+IMG_PATH = os.path.join(current_dir, 'data', config['common']['img_path'])  # Path to the 'img' folder
+CSV_PATH = os.path.join(current_dir, 'data', config['common']['csv_file'])  # Path to 'labels.csv' in 'Data'
+CLASSES_LIST = classes_list(os.path.join(current_dir, 'data', config['common']['classes_file']))  # Path to 'receipt_labels.txt' in 'Data'
 NUM_CLASSES = len(CLASSES_LIST)
 
 

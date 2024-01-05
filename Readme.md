@@ -24,7 +24,7 @@ To train and use the Faster R-CNN model, follow these steps to set up your devel
 3. **Install Dependencies**:
    Navigate to the project's root directory and run:
    ```bash
-   pip install -r requirements.txt
+   pip install -r src/requirements.txt
    ```
 
 ### PyTorch Installation
@@ -41,18 +41,18 @@ Choose one of the following commands based on your CUDA version to install PyTor
 
 ### Preparing the Dataset
 
-1. **CSV File**: Create a CSV file with columns: `Frames`, `Xmin`, `Ymin`, `Xmax`, `Ymax`, and `Labels`. This file will contain the annotations for your training data.
+1. **CSV File**: Create a CSV file with columns: `Frames`, `Xmin`, `Ymin`, `Xmax`, `Ymax`, and `Labels`. This file will contain the annotations for your training data. (See `data/dataset.csv` file)
 2. **Labels File**: Create a `labels.txt` file with each class name on a new line, starting with 'background' as the first line.
 3. **Data Directory**: Place your image data in the `data/img/` folder and upload the `.csv` and `.txt` files to the `data/` folder.
 
 ## Training the Model
 
-1. **Configure Hyperparameters**: Set your desired hyperparameters and directory paths in the `config.yaml` file.
+1. **Configure Hyperparameters**: Set your desired hyperparameters and directory paths in the `src/Config/config.yaml` file.
 2. **Start Training**: From the project's root directory, launch the training process:
    ```bash
    python src/train.py
    ```
-   This process will create an `Output` folder with subfolders named `train-{day}-{time}` for each training session. Inside these, you'll find the trained model, loss plots, and test predictions.
+   This process will create an `output` folder with subfolders named `train-{day}-{time}` for each training session. Inside these, there are `train` and `test` folders. In `train` folder you'll find the trained model and loss plots and in `test` folder you will find predictions on a certain number of images that you can set in `src/Config/config.yaml` file.
 
 ## Making Predictions
 

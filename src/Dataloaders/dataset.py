@@ -44,7 +44,7 @@ class Transformation():
     
 
 class MyDataset(Dataset):
-  def __init__(self, img_path, csv_path, classes, transforms=None):
+  def __init__(self, img_path, csv_path, mask_path, classes, transforms=None):
     super().__init__()
     print("Preparing the dataset...")
 
@@ -52,6 +52,7 @@ class MyDataset(Dataset):
     self.gt_info = pd.read_csv(csv_path)
     self.classes = classes
     self.transforms = transforms
+    self.mask_dir = mask_path  # Directory containing mask images
 
     # Create a list of image file names (in sorted order - this is optional)
     self.image_paths = glob.glob(f"{img_path}/*.jpg")
@@ -85,6 +86,12 @@ class MyDataset(Dataset):
     boxes = torch.Tensor(gt_info[['Xmin', 'Ymin', 'Xmax', 'Ymax']].values).float()
 
     labels = torch.LongTensor(gt_info['Labels'].values.tolist())
+
+    # Read and process masks
+    mask_files = self.get_mask_files_for_image(image_name)
+    masks = [cv2.imread(mask_file, cv2.IMREAD_GRAYSCALE) for mask_file in mask_files]
+    masks = np.stack(masks, axis=0)
+    masks = masks > 0  # Convert to boolean mask
 
     if self.transforms:
         image = self.transforms.random_adjust_contrast(image, enable=True)

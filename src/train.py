@@ -8,6 +8,9 @@ from utils import plot_loss, plot_image, inference
 from Models import models
 from Dataloaders import dl_image
 
+
+
+
 def setup_output_directories():
     # Get the current working directory
     current_dir = os.getcwd()
@@ -19,17 +22,17 @@ def setup_output_directories():
     output_dir_name = f"train-{dt_string}"
 
     # Construct the full path for the output directory
-    output_dir = os.path.join(current_dir, 'Output', output_dir_name)
+    output_dir = os.path.join(current_dir, 'output', output_dir_name)
 
     # Define subdirectories for training and validation results
     train_dir = os.path.join(output_dir, "train")
-    val_dir = os.path.join(output_dir, "val")
+    test_dir = os.path.join(output_dir, "test")
 
     # Create the output, training, and validation directories if they don't exist
-    for dir in [output_dir, train_dir, val_dir]:
+    for dir in [output_dir, train_dir, test_dir]:
         os.makedirs(dir, exist_ok=True)
 
-    return train_dir, val_dir
+    return train_dir, test_dir
 
 def initialize_model():
     # Determine if CUDA (GPU) is available and select the appropriate device
@@ -154,7 +157,7 @@ def evaluate(model, data_loader, device):
 
 
 
-def train(model, device, train_dir, val_dir, data_loader_train, data_loader_val):
+def train(model, device, train_dir, data_loader_train, data_loader_val):
     # Initialize optimizer and learning rate scheduler
     optimizer = torch.optim.SGD(model.parameters(), lr=dl_image.LR, momentum=dl_image.LR_MOMENTUM, weight_decay=dl_image.LR_DECAY_RATE)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=dl_image.LR_SCHED_STEP_SIZE, gamma=dl_image.LR_SCHED_GAMMA)
@@ -196,7 +199,7 @@ def train(model, device, train_dir, val_dir, data_loader_train, data_loader_val)
 
     print("Training Finished!")
 
-def val(model, device, val_dir, dataset_val, classes_list, num_images):
+def test(model, device, test_dir, dataset_val, classes_list, num_images):
     # Set the random seed for reproducibility
     random.seed(dl_image.SEED)
 
@@ -218,20 +221,20 @@ def val(model, device, val_dir, dataset_val, classes_list, num_images):
 
         # Plot and save the image with predictions
         plot_image(img_np, boxes, scores, labels, classes_list, 
-                   save_path=os.path.join(val_dir, f"inference_{idx}.png"))
+                   save_path=os.path.join(test_dir, f"inference_{idx}.png"))
 
 if __name__ == '__main__':
-    train_dir, val_dir = setup_output_directories()
+    train_dir, test_dir = setup_output_directories()
     model, device = initialize_model()
     data_loader_train, data_loader_val, dataset_train, dataset_val = dl_image.DataDetectionLoader(model).load_train_val_datasets()
     
     print('\n===========================================================================')
-    print(f"Number of training samples: {int(dl_image.BATCH_SIZE*len(data_loader_train))} | Number of training samples in each batch : {len(data_loader_train)}") 
+    print(f"Number of training samples: {int(dl_image.BATCH_SIZE*len(data_loader_train))} | Number of batch : {len(data_loader_train)}") 
     print(f"Number of validation samples: {len(data_loader_val)}\n")
     print('===========================================================================')
 
 
     print("==================== training data starting ... ====================")
-    train(model, device, train_dir, val_dir, data_loader_train, data_loader_val)
+    train(model, device, train_dir, data_loader_train, data_loader_val)
     
-    val(model, device, val_dir, dataset_val, dl_image.CLASSES_LIST, dl_image.NUM_TEST_IMAGES)
+    test(model, device, test_dir, dataset_val, dl_image.CLASSES_LIST, dl_image.NUM_TEST_IMAGES)
